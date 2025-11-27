@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AutoTalk AI — Conversational AI für Kundenservice</title>
+  <meta name="description" content="AutoTalk AI — KI-Chatbots für Support, Vertrieb und Lead-Generierung. Schnelle Integration, DSGVO-konform, 24/7." />
+  <meta name="robots" content="index,follow" />
+  <link rel="icon" href="favicon.ico" />
+  <!-- Minimal CSS: modern, responsive -->
+  <style>
+    :root{
+      --accent:#0ea5a4;
+      --bg:#0f172a;
+      --muted:#6b7280;
+      --card:#0b1220;
+      --glass: rgba(255,255,255,0.04);
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{background:linear-gradient(180deg,#071029 0%, #071026 100%); color:#e6eef6; -webkit-font-smoothing:antialiased; padding:24px;}
+    .container{max-width:1100px;margin:0 auto;}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo img{height:44px}
+    nav{display:flex;gap:16px;align-items:center}
+    a.btn{background:var(--accent);color:#042027;padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none}
+    a.ghost{color:var(--muted);text-decoration:none;font-weight:600}
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;padding:40px 0}
+    .hero h1{font-size:clamp(28px,4.4vw,44px);margin:0 0 14px 0;line-height:1.02}
+    .hero p.lead{color:var(--muted);margin:0 0 20px 0;font-size:16px}
+    .cta-row{display:flex;gap:12px;align-items:center}
+    .feature-cards{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+    .card{background:var(--card);padding:18px;border-radius:12px;min-width:160px;box-shadow: 0 6px 20px rgba(0,0,0,0.5)}
+    /* Demo box */
+    .demo{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px;padding:18px;height:320px;display:flex;flex-direction:column;gap:10px}
+    .messages{flex:1;overflow:auto;padding-right:6px}
+    .msg{padding:10px 14px;border-radius:12px;max-width:75%}
+    .msg.user{margin-left:auto;background:linear-gradient(90deg,#073740,#065f5d);color:#dff6f5}
+    .msg.bot{background:var(--glass);color:#cfeaf0}
+    .input-row{display:flex;gap:8px}
+    input[type="text"]{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    button.send{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:#022;cursor:pointer}
+    /* Sections */
+    section{padding:36px 0;border-top:1px solid rgba(255,255,255,0.02)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .feature{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:18px;border-radius:10px}
+    .pricing{display:flex;gap:14px;flex-wrap:wrap}
+    .price-card{background:var(--card);padding:20px;border-radius:12px;min-width:220px;flex:1}
+    /* Footer */
+    footer{padding:22px 0;color:var(--muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    /* Responsive */
+    @media (max-width:960px){
+      .hero{grid-template-columns:1fr; text-align:center}
+      .demo{height:260px}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <!-- TODO: Logo ersetzen -->
+        <img src="logo-placeholder.svg" alt="AutoTalk AI" />
+        <strong>AutoTalk AI</strong>
+      </div>
+      <nav>
+        <a href="#features" class="ghost">Features</a>
+        <a href="#pricing" class="ghost">Preise</a>
+        <a href="#contact" class="ghost">Kontakt</a>
+        <a href="#get" class="btn">Kostenlos testen</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <main class="hero" role="main">
+      <div>
+        <h1>Conversational AI, die Verkäufe & Support automatisiert.</h1>
+        <p class="lead">Integriere AutoTalk AI in wenigen Minuten. 24/7 Chatbot-Support, Lead-Qualifizierung und Talk-to-API für deine Web- und Messaging-Kanäle.</p>
+        <div class="cta-row">
+          <a class="btn" href="#get">Kostenlos testen</a>
+          <a class="ghost" href="#features">Mehr erfahren</a>
+        </div>
+
+        <div class="feature-cards" style="margin-top:18px">
+          <div class="card"><strong>Multichannel</strong><div style="color:var(--muted);font-size:13px;margin-top:8px">Website, WhatsApp, Messenger</div></div>
+          <div class="card"><strong>DSGVO-konform</strong><div style="color:var(--muted);font-size:13px;margin-top:8px">Sichere Datenhaltung</div></div>
+          <div class="card"><strong>No-Code Setup</strong><div style="color:var(--muted);font-size:13px;margin-top:8px">Vorlagen & Integrationen</div></div>
+        </div>
+      </div>
+
+      <!-- DEMO CHAT -->
+      <aside>
+        <div class="demo" aria-live="polite">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:700">Live Demo</div>
+            <div style="font-size:12px;color:var(--muted)">No-backend demo</div>
+          </div>
+          <div class="messages" id="messages" role="log" aria-atomic="false">
+            <div class="msg bot">Hallo 👋 Wie kann ich dir heute helfen?</div>
+            <div class="msg user">Ich möchte mehr über Preise wissen.</div>
+            <div class="msg bot">Unsere Pläne starten bei 29€/Monat. Willst du Details?</div>
+          </div>
+
+          <div class="input-row">
+            <input id="userInput" type="text" placeholder="Frag den Bot (Demo)..." aria-label="Nachricht eingeben" />
+            <button class="send" id="sendBtn">Senden</button>
+          </div>
+        </div>
+
+        <small style="display:block;margin-top:10px;color:var(--muted)">Hinweis: Dies ist eine statische Demo. Um echten Chat einzubauen, verbinde das Eingabefeld mit deinem Chatbot-API-Endpoint.</small>
+      </aside>
+    </main>
+
+    <!-- FEATURES -->
+    <section id="features">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="margin:0">Funktionen</h2>
+        <p style="color:var(--muted);margin:0">Skalierbar, sicher & einfach.</p>
+      </div>
+
+      <div class="grid" style="margin-top:18px">
+        <div class="feature">
+          <h3 style="margin:0 0 8px 0">Schnelle Integration</h3>
+          <p style="color:var(--muted);margin:0">Snippet auf der Website, Plugins für Shopify & CMS, REST/WebSocket API.</p>
+        </div>
+        <div class="feature">
+          <h3 style="margin:0 0 8px 0">Kontext-Aware</h3>
+          <p style="color:var(--muted);margin:0">Erinnert sich an Nutzer-Kontext, nahtlose Übergabe an Agenten.</p>
+        </div>
+        <div class="feature">
+          <h3 style="margin:0 0 8px 0">Reporting</h3>
+          <p style="color:var(--muted);margin:0">Konversationen, Conversion-Tracking und Metriken.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing">
+      <h2 style="margin:0">Preise</h2>
+      <p style="color:var(--muted);margin:6px 0 18px 0">Flexible Pläne — starte klein, skaliere mit Traffic.</p>
+
+      <div class="pricing">
+        <div class="price-card">
+          <h3>Starter</h3>
+          <p style="font-size:22px;margin:6px 0">29€/Monat</p>
+          <ul style="color:var(--muted);padding-left:18px">
+            <li>1 Chat-Bot</li>
+            <li>2.000 Nachrichten / Monat</li>
+            <li>Basic Analytics</li>
+          </ul>
+          <a class="btn" href="#get" style="display:inline-block;margin-top:12px">Loslegen</a>
+        </div>
+        <div class="price-card">
+          <h3>Business</h3>
+          <p style="font-size:22px;margin:6px 0">99€/Monat</p>
+          <ul style="color:var(--muted);padding-left:18px">
+            <li>5 Chat-Bots</li>
+            <li>25.000 Nachrichten / Monat</li>
+            <li>Team-Accounts & SLA</li>
+          </ul>
+          <a class="btn" href="#get" style="display:inline-block;margin-top:12px">Demo anfragen</a>
+        </div>
+        <div class="price-card">
+          <h3>Enterprise</h3>
+          <p style="font-size:22px;margin:6px 0">Individuell</p>
+          <ul style="color:var(--muted);padding-left:18px">
+            <li>Unbegrenzte Bots</li>
+            <li>Dedicated Support</li>
+            <li>On-Prem / VPC Optionen</li>
+          </ul>
+          <a class="btn" href="#contact" style="display:inline-block;margin-top:12px">Kontakt</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- GET / SIGNUP -->
+    <section id="get">
+      <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <h2>Bereit zu starten?</h2>
+          <p style="color:var(--muted);margin:6px 0 12px 0">Teste AutoTalk AI 14 Tage kostenlos — keine Kreditkarte nötig.</p>
+        </div>
+
+        <form id="signupForm" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input id="email" type="email" placeholder="Deine E-Mail" required style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+          <button class="btn" type="submit">Kostenlos testen</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <h2>Kontakt</h2>
+      <p style="color:var(--muted);margin:6px 0 12px 0">Für Integrationen, Preise und Enterprise-Anfragen.</p>
+
+      <form id="contactForm" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:820px">
+        <input name="name" placeholder="Name" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+        <input name="email" placeholder="E-Mail" style="padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+        <input name="company" placeholder="Firma (optional)" style="grid-column:1/3;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit" />
+        <textarea name="message" placeholder="Nachricht" rows="5" style="grid-column:1/3;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit"></textarea>
+        <div style="grid-column:1/3;display:flex;gap:8px;align-items:center">
+          <button class="btn" type="button" id="contactSend">Nachricht senden</button>
+          <small style="color:var(--muted)">Alternativ: <a class="ghost" href="mailto:hello@autotalk.ai">hello@autotalk.ai</a></small>
+        </div>
+      </form>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2>FAQ</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+        <div class="card"><strong>Wie schnell ist die Integration?</strong><p style="color:var(--muted)">In vielen Fällen in unter 30 Minuten (Snippet).</p></div>
+        <div class="card"><strong>Unterstützt ihr DSGVO?</strong><p style="color:var(--muted)">Ja — EU-Hosting & Datenkontrolle möglich.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> AutoTalk AI — Alle Rechte vorbehalten</div>
+      <div style="display:flex;gap:12px">
+        <a class="ghost" href="#">Datenschutz</a>
+        <a class="ghost" href="#">AGB</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Minimal JS: Demo chat + forms -->
+  <script>
+    // Jahr automatisch
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Demo chat: rein lokale Simulation (kein Backend)
+    const sendBtn = document.getElementById('sendBtn');
+    const input = document.getElementById('userInput');
+    const messages = document.getElementById('messages');
+
+    function appendMsg(text, cls='bot'){
+      const el = document.createElement('div');
+      el.className = 'msg ' + (cls === 'user' ? 'user' : 'bot');
+      el.textContent = text;
+      messages.appendChild(el);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', ()=> {
+      const val = input.value.trim();
+      if(!val) return;
+      appendMsg(val, 'user');
+      input.value = '';
+      // Simple canned responses for demo
+      setTimeout(()=> {
+        if(/preis|kosten|kostenlos/i.test(val)) appendMsg('Unsere Pläne beginnen bei 29€/Monat. Möchtest du eine Demo?');
+        else if(/demo|testen/i.test(val)) appendMsg('Gerne! Trage deine E-Mail ein und wir schicken dir Zugang.');
+        else appendMsg('Interessant — erzähl mir mehr oder kontaktiere uns direkt unter hello@autotalk.ai');
+      }, 700);
+    });
+
+    input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ sendBtn.click(); } });
+
+    // Signup form: simple client fallback -> mailto
+    document.getElementById('signupForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = document.getElementById('email').value || '';
+      // Fallback: open mail client with prefilled subject (replace with real endpoint)
+      window.location.href = 'mailto:hello@autotalk.ai?subject=Test%20anfordern&body=E-Mail:%20' + encodeURIComponent(email);
+    });
+
+    // Contact: fallback
+    document.getElementById('contactSend').addEventListener('click', function(){
+      const form = document.getElementById('contactForm');
+      const fd = new FormData(form);
+      const body = Array.from(fd.entries()).map(([k,v]) => k+': '+v).join('%0D%0A');
+      window.location.href = 'mailto:hello@autotalk.ai?subject=Kontakt%20via%20Website&body=' + body;
+    });
+  </script>
+</body>
+</html>
