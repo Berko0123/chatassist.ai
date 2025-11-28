@@ -196,22 +196,37 @@
 
       <div class="contact">
         <div class="card">
-          <form id="contactForm" onsubmit="submitContact(event)">
-            <input type="text" id="name" name="name" placeholder="Ihr Name" required />
-            <input type="email" id="email" name="email" placeholder="Ihre E-Mail" required />
-            <select id="plan" name="plan" aria-label="Gewähltes Paket">
-              <option>Individualisierbarer Chatbot — 150€/Monat</option>
-              <option>Chatbot + Website — 300€/Monat</option>
-            </select>
-            <textarea id="message" name="message" rows="5" placeholder="Beschreiben Sie Ihre Anforderungen / Fragen..." required></textarea>
+          <form action="https://formsubmit.co/berkan.pak@outlook.com" method="POST">
 
-            <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
-              <button type="submit">Anfrage senden</button>
-              <div style="color:var(--muted);font-size:14px">Alternativ: <a href="mailto:berkan.pak@outlook.com">berkan.pak@outlook.com</a></div>
-            </div>
+  <!-- FormSubmit Einstellungen -->
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_subject" value="Neue Anfrage über AutoTalk AI">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_next" value="https://DEIN-NUTZERNAME.github.io/autotalk-ai-website/danke.html">
 
-            <p style="color:var(--muted);font-size:13px;margin-top:10px">Wir berechnen keine Einrichtungsgebühr. Zahlung erst nach Ihrer Zufriedenheit. Monatlich kündbar.</p>
-          </form>
+  <input type="text" name="name" placeholder="Ihr Name" required>
+  <input type="email" name="email" placeholder="Ihre E-Mail" required>
+  
+  <select name="plan">
+    <option>Individualisierbarer Chatbot — 150€/Monat</option>
+    <option>Chatbot + Website — 300€/Monat</option>
+  </select>
+
+  <textarea name="message" rows="5" placeholder="Beschreiben Sie Ihre Anforderungen / Fragen..." required></textarea>
+
+  <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+    <button type="submit">Anfrage senden</button>
+    <div style="color:var(--muted);font-size:14px">Alternativ: 
+      <a href="mailto:berkan.pak@outlook.com">berkan.pak@outlook.com</a>
+    </div>
+  </div>
+
+  <p style="color:var(--muted);font-size:13px;margin-top:10px">
+    Wir berechnen keine Einrichtungsgebühr. Zahlung erst nach Ihrer Zufriedenheit. Monatlich kündbar.
+  </p>
+
+</form>
+
         </div>
 
         <aside class="card" style="display:flex;flex-direction:column;gap:12px;justify-content:center">
