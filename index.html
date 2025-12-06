@@ -3,320 +3,203 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AutoTalk AI — Innovative Chatbots</title>
-<meta name="description" content="AutoTalk AI — individuelle Chatbots & Webauftritte. Demo mit 3D Produktansicht." />
-<link rel="icon" href="assets/favicon.png" />
-<!-- Three.js als ES module -->
-<script type="module">
-  // nothing here — main app wird am Ende geladen
-</script>
-
+<title>Interactive Zoom Gallery — Demo</title>
+<meta name="description" content="Interaktive Startseite mit Zoom zu 3D-Produkten (three.js + GSAP)" />
 <style>
   :root{
-    --bg:#f7fbff;
-    --card:#ffffff;
-    --accent:#00bfa6;
-    --muted:#64748b;
-    --glass: rgba(0,191,166,0.08);
-    --radius:14px;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --bg:#fbfdff;
+    --panel:rgba(11,107,90,0.95);
+    --muted:#6b7280;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#ffffff);color:#0b1220}
-  .wrap{max-width:1200px;margin:28px auto;padding:28px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:14px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand img{height:48px;width:auto;display:block}
-  .brand .title{font-weight:800;letter-spacing:0.2px}
-  nav a{color:var(--muted);text-decoration:none;margin-left:14px;font-weight:600}
-  .hero{display:grid;grid-template-columns:1fr 520px;gap:28px;align-items:center;margin-top:28px}
-  .kicker{display:inline-block;background:linear-gradient(90deg,var(--accent),#008f80);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px}
-  h1{font-size:clamp(26px,4vw,42px);margin:12px 0}
-  p.lead{color:var(--muted);margin:0 0 18px;max-width:64ch}
-  .features{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-  .feat{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 8px 30px rgba(11,18,24,0.04);min-width:170px}
-  .panel{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:0 18px 60px rgba(9,11,12,0.06)}
-  /* 3D canvas area */
-  #viewer-wrap{height:420px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#f1fbfb,#ffffff);display:flex;align-items:center;justify-content:center;position:relative}
-  canvas{display:block;width:100%;height:100%}
-  .overlay-ui{position:absolute;left:12px;top:12px;display:flex;gap:8px;z-index:6}
-  .btn{background:var(--glass);border-radius:10px;padding:8px 10px;color:var(--accent);font-weight:700;border:0;cursor:pointer}
-  .model-list{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .model-item{background:transparent;border:1px solid rgba(11,107,90,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
-  .pricing{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-  .plan{flex:1;min-width:240px;padding:16px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbffff);border:1px solid rgba(0,0,0,0.04)}
-  .price{font-size:20px;font-weight:800;color:var(--accent);margin-top:6px}
-  /* contact */
-  .contact{margin-top:18px;display:grid;grid-template-columns:1fr 320px;gap:18px}
-  input,textarea,select{padding:12px;border-radius:10px;border:1px solid #e6eef6;background:#fff;font-size:15px;width:100%}
-  button[type="submit"]{background:var(--accent);color:#fff;padding:12px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
-  footer{margin-top:28px;color:var(--muted);font-size:14px}
-  @media(max-width:980px){
-    .hero{grid-template-columns:1fr}
-    .contact{grid-template-columns:1fr}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#eef6f7);overflow:hidden}
+  #canvas-container{position:fixed;inset:0}
+  /* minimal overlay UI */
+  .ui {
+    position:fixed;left:24px;top:24px;z-index:50;display:flex;gap:12px;align-items:center;
+    backdrop-filter: blur(6px);padding:8px 12px;border-radius:10px;
+    background:rgba(255,255,255,0.6);box-shadow:0 6px 20px rgba(12,20,30,0.08)
   }
+  .logo{height:36px;font-weight:800;color:#0b6b5a}
+  .cta {margin-left:auto;background:#0b6b5a;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:700}
+  /* product card */
+  .card {
+    position:fixed;right:24px;bottom:24px;z-index:60;width:320px;padding:14px;border-radius:12px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,249,249,0.95));
+    box-shadow:0 12px 40px rgba(4,12,18,0.12);display:none;
+  }
+  .card h3{margin:0;font-size:18px;color:#07231f}
+  .card p{margin:8px 0 0;color:var(--muted);font-size:14px}
+  .close-btn{margin-top:12px;background:#0b6b5a;color:#fff;padding:8px;border-radius:8px;border:0;cursor:pointer}
+  /* small help text */
+  .hint{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:40;background:rgba(0,0,0,0.6);color:#fff;padding:6px 10px;border-radius:999px;font-size:13px}
+  /* loader */
+  #loader {position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:80;padding:8px 12px;border-radius:8px;background:#0b6b5a;color:#fff;display:none}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img src="assets/logo.png" alt="Logo" />
-        <div>
-          <div class="title">AutoTalk AI</div>
-          <div style="font-size:12px;color:var(--muted)">Conversational AI • Modern Web</div>
-        </div>
-      </div>
-      <nav>
-        <a href="#features">Funktionen</a>
-        <a href="#pricing">Preise</a>
-        <a href="#kontakt">Kontakt</a>
-      </nav>
-    </header>
+  <div id="canvas-container"></div>
 
-    <main class="hero" role="main" aria-labelledby="headline">
-      <section>
-        <span class="kicker">Schnell • Sicher • Innovativ</span>
-        <h1 id="headline">Interaktive 3D-Produktansicht & intelligente Chatbots</h1>
-        <p class="lead">Beim Laden der Startseite wird automatisch „hineingezoomt“ — Besucher sehen Ihre Produkte als 3D-Modelle. Ideal für Demo & Sales.</p>
-
-        <div class="features">
-          <div class="feat"><strong>Keine Installationskosten</strong><div style="color:var(--muted)">Monatlich kündbar</div></div>
-          <div class="feat"><strong>Zahlung nach Zufriedenheit</strong><div style="color:var(--muted)">Kein Risiko</div></div>
-          <div class="feat"><strong>Individuelle Integration</strong><div style="color:var(--muted)">Shopify, WordPress, Custom</div></div>
-        </div>
-
-        <div class="pricing" id="pricing">
-          <div class="plan">
-            <div style="font-weight:700">Chatbot (nur)</div>
-            <div class="price">150 €/Monat</div>
-            <div style="color:var(--muted);margin-top:8px">Custom Flows, Integration, Support</div>
-          </div>
-          <div class="plan">
-            <div style="font-weight:700">Chatbot + Website</div>
-            <div class="price">300 €/Monat</div>
-            <div style="color:var(--muted);margin-top:8px">Design & Konversion, SEO-leicht</div>
-          </div>
-        </div>
-      </section>
-
-      <aside>
-        <div class="panel">
-          <div id="viewer-wrap">
-            <div class="overlay-ui">
-              <button class="btn" id="zoomBtn">Zoom</button>
-              <button class="btn" id="autoRotateBtn">Auto-Rotate</button>
-            </div>
-
-            <!-- Three.js Canvas wird dynamisch eingefügt -->
-            <div id="three-root" style="width:100%;height:100%"></div>
-          </div>
-
-          <div class="model-list" id="modelList" aria-label="Modelle">
-            <!-- Buttons werden per JS gefüllt -->
-          </div>
-        </div>
-      </aside>
-    </main>
-
-    <!-- Kontakt -->
-    <section id="kontakt">
-      <h2 style="margin-top:22px">Kontakt & Anfrage</h2>
-      <div class="contact">
-        <div class="panel">
-          <form id="contactForm" action="https://formsubmit.co/kappa.berko2002@gmail.com" method="POST">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_subject" value="Neue Anfrage AutoTalk AI">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="https://BERKOGITHUB.github.io/DEIN-REPO/danke.html">
-
-            <input name="name" placeholder="Ihr Name" required>
-            <input type="email" name="email" placeholder="E-Mail" required style="margin-top:8px">
-            <select name="plan" style="margin-top:8px">
-              <option>Individualisierbarer Chatbot — 150€/Monat</option>
-              <option>Chatbot + Website — 300€/Monat</option>
-            </select>
-            <textarea name="message" rows="4" placeholder="Kurz Ihr Projekt..." required style="margin-top:8px"></textarea>
-
-            <div style="display:flex;gap:8px;margin-top:10px">
-              <button type="submit">Anfrage senden</button>
-              <a href="mailto:berkan.pak@outlook.com" class="btn" style="background:var(--accent);color:#fff">Direkt mailen</a>
-            </div>
-          </form>
-        </div>
-
-        <aside class="panel">
-          <strong>Direkter Kontakt</strong>
-          <div style="color:var(--muted);margin-top:8px">E-Mail: <a href="mailto:berkan.pak@outlook.com">berkan.pak@outlook.com</a></div>
-          <div style="margin-top:12px;color:var(--muted)">Wir melden uns schnell zurück — Zahlung erst nach Zufriedenheit.</div>
-        </aside>
-      </div>
-    </section>
-
-    <footer>© <span id="yr"></span> AutoTalk AI — Alle Rechte vorbehalten</footer>
+  <div class="ui">
+    <div class="logo">AutoTalk AI</div>
+    <a class="cta" href="#kontakt">Jetzt anfragen</a>
   </div>
 
-<!-- Three.js app: lädt Modelle aus assets/models/product1.glb etc.
-     WICHTIG: benutze relative Pfade (assets/models/...) und stelle sicher, die Dateien sind im Repository -->
-<script type="module">
-import * as THREE from 'https://unpkg.com/three@0.152.0/build/three.module.js';
-import {GLTFLoader} from 'https://unpkg.com/three@0.152.0/examples/jsm/loaders/GLTFLoader.js';
-import {OrbitControls} from 'https://unpkg.com/three@0.152.0/examples/jsm/controls/OrbitControls.js';
+  <div id="loader">Lädt 3D-Modell…</div>
 
-const container = document.getElementById('three-root');
-const width = container.clientWidth;
-const height = container.clientHeight;
+  <div class="card" id="productCard" role="dialog" aria-hidden="true">
+    <h3 id="pcTitle">Produkt</h3>
+    <p id="pcDesc">Beschreibung</p>
+    <button class="close-btn" id="cardClose">Schließen</button>
+  </div>
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf6fbfb);
+  <div class="hint">Klicke auf einen Punkt, um reinzuzoomen</div>
 
-const camera = new THREE.PerspectiveCamera(40, width/height, 0.1, 100);
-camera.position.set(0, 1.2, 4);
+  <!-- three.js + loaders + GSAP (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.0/dist/gsap.min.js"></script>
 
-const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
-renderer.setSize(container.clientWidth, container.clientHeight);
-renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-container.appendChild(renderer.domElement);
+  <script>
+  /* ---------- Setup Szene, Kamera, Renderer ---------- */
+  const container = document.getElementById('canvas-container');
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0xeef6f7, 0.02);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 1.2;
-controls.maxDistance = 8;
-controls.target.set(0, 0.8, 0);
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  container.appendChild(renderer.domElement);
 
-// Licht
-const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6); scene.add(hemi);
-const dir = new THREE.DirectionalLight(0xffffff, 0.8); dir.position.set(5,10,7); scene.add(dir);
+  const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 1000);
+  camera.position.set(0, 6, 18);
 
-// Boden / subtle grid
-const grid = new THREE.Mesh(
-  new THREE.PlaneGeometry(20,20),
-  new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:0.0})
-);
-grid.rotation.x = -Math.PI/2; grid.position.y = -0.01; scene.add(grid);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.rotateSpeed = 0.4;
+  controls.minDistance = 2;
+  controls.maxDistance = 80;
 
-// Model management
-const loader = new GLTFLoader();
-let currentModel = null;
-let autoRotate = false;
+  // light
+  const amb = new THREE.AmbientLight(0xffffff, 0.9); scene.add(amb);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.6); dir.position.set(5,10,7); scene.add(dir);
 
-// Liste der Produkt-Dateien (ersetzbar)
-/* Stelle sicher: assets/models/product1.glb, product2.glb, product3.glb existieren.
-   Wenn nicht, nutzt das Fallback-Image-Widget (keine 3D-Ansicht). */
-const models = [
-  { id: 'produkt-1', name: 'Chatbot Demo', path:'assets/models/product1.glb', fallback:'assets/hero.jpg' },
-  { id: 'produkt-2', name: 'Website Demo', path:'assets/models/product2.glb', fallback:'assets/hero.jpg' },
-  { id: 'produkt-3', name: 'Support Bot', path:'assets/models/product3.glb', fallback:'assets/hero.jpg' }
-];
+  /* ---------- Sterne/Punkte als Klick-Targets ---------- */
+  const pointsGroup = new THREE.Group();
+  scene.add(pointsGroup);
 
-const modelListEl = document.getElementById('modelList');
+  // sample "products" (position, label, modelPath)
+  const PRODUCTS = [
+    {id: 'p1', pos: new THREE.Vector3(-6,1.5,-8), title:'Chatbot Basic', desc:'Individuell & monatlich kündbar — 150€/Monat', model:'assets/models/model1.glb'},
+    {id: 'p2', pos: new THREE.Vector3(5,2,-5), title:'Chatbot + Website', desc:'inkl. Website-Erstellung — 300€/Monat', model:'assets/models/model2.glb'}
+  ];
 
-models.forEach((m, idx) => {
-  const btn = document.createElement('button');
-  btn.className = 'model-item';
-  btn.textContent = m.name;
-  btn.onclick = () => loadModel(m);
-  modelListEl.appendChild(btn);
-  if(idx===0) setTimeout(()=>loadModel(m), 400); // lade erstes Modell nach kurzem delay
-});
-
-function disposeCurrent(){
-  if(!currentModel) return;
-  scene.remove(currentModel);
-  currentModel.traverse(child => {
-    if(child.geometry) child.geometry.dispose();
-    if(child.material) {
-      if(Array.isArray(child.material)){
-        child.material.forEach(mat=>mat.dispose());
-      } else mat.dispose();
-    }
+  // small sprite for each product
+  const spriteMaterial = new THREE.SpriteMaterial({ color: 0x00a079 });
+  PRODUCTS.forEach((p,i)=>{
+    const sp = new THREE.Sprite(spriteMaterial.clone());
+    sp.material.sizeAttenuation = true;
+    sp.scale.set(0.8,0.8,0.8);
+    sp.position.copy(p.pos);
+    sp.userData = { productIndex: i };
+    pointsGroup.add(sp);
   });
-  currentModel = null;
-}
 
-function loadModel(m){
-  disposeCurrent();
-  // lade .glb
-  loader.load(m.path,
-    gltf => {
-      const obj = gltf.scene || gltf.scenes[0];
-      obj.scale.setScalar(1.0);
-      // Zentriere
-      const box = new THREE.Box3().setFromObject(obj);
-      const size = new THREE.Vector3(); box.getSize(size);
-      const center = new THREE.Vector3(); box.getCenter(center);
-      obj.position.sub(center); // zentrieren
-      // wenn sehr groß / klein: anpassen
-      const maxSize = Math.max(size.x,size.y,size.z);
-      if(maxSize > 2) obj.scale.multiplyScalar(2/maxSize);
-      if(maxSize < 0.8) obj.scale.multiplyScalar(0.9/maxSize);
+  /* ---------- Raycaster (zum Klicken) ---------- */
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
 
-      currentModel = obj;
-      scene.add(obj);
-      // sanfter zoom-in animation
-      zoomToModel();
-    },
-    undefined,
-    err => {
-      console.warn('GLTF load failed for', m.path, err);
-      // fallback: zeige einfache Bild-Plane
-      const tex = new THREE.TextureLoader().load(m.fallback);
-      const mat = new THREE.MeshBasicMaterial({map:tex});
-      const plane = new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.6), mat);
-      currentModel = plane;
-      scene.add(plane);
-      zoomToModel();
+  function onClick(e){
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(pointsGroup.children, true);
+    if(hits.length>0){
+      const hit = hits[0].object;
+      const idx = hit.userData.productIndex;
+      if(idx !== undefined) openProduct(idx);
     }
-  );
-}
-
-function zoomToModel(){
-  // kleine Animation: kamera näher ran
-  const from = {z: camera.position.z};
-  const toZ = 2.2;
-  let t=0;
-  const dur = 60; // frames
-  function step(){
-    t++;
-    const p = Math.min(1, t/dur);
-    camera.position.z = from.z*(1-p) + toZ*p;
-    if(p<1) requestAnimationFrame(step);
   }
-  step();
-}
+  renderer.domElement.addEventListener('pointerdown', onClick, false);
 
-// Interactivity: Zoom button / autorotate
-document.getElementById('zoomBtn').addEventListener('click', ()=> {
-  camera.position.set(0,1.2,1.6);
-});
-document.getElementById('autoRotateBtn').addEventListener('click', ()=>{
-  autoRotate = !autoRotate;
-  document.getElementById('autoRotateBtn').textContent = autoRotate ? 'Stop' : 'Auto-Rotate';
-});
+  /* ---------- 3D Modell laden & Zoom Animation ---------- */
+  const loader = new THREE.GLTFLoader();
+  let currentModel = null;
+  const loaderOverlay = document.getElementById('loader');
 
-window.addEventListener('resize', onResize);
-function onResize(){
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  camera.aspect = container.clientWidth/container.clientHeight;
-  camera.updateProjectionMatrix();
-}
+  function showLoader(show){ loaderOverlay.style.display = show ? 'block' : 'none' }
 
-function animate(){
-  requestAnimationFrame(animate);
-  if(autoRotate && currentModel){
-    currentModel.rotation.y += 0.006;
+  function openProduct(index){
+    const product = PRODUCTS[index];
+    showLoader(true);
+    // Kamera zoom/tween auf position nahe des product point
+    const target = {x: product.pos.x, y: product.pos.y, z: product.pos.z};
+    // Zielkamera-Position: etwas in front
+    const newCam = { x: product.pos.x, y: product.pos.y + 1.2, z: product.pos.z + 3.5 };
+
+    gsap.to(camera.position, {
+      duration: 1.1,
+      x: newCam.x, y: newCam.y, z: newCam.z,
+      ease: "power2.inOut",
+      onUpdate: function(){ camera.lookAt(product.pos); }
+    });
+
+    // lade Modell (falls vorhanden)
+    if(currentModel){ scene.remove(currentModel); currentModel = null; }
+    loader.load(product.model, gltf => {
+      currentModel = gltf.scene;
+      currentModel.position.copy(product.pos);
+      // scale to sensible size:
+      currentModel.scale.setScalar(1.0);
+      scene.add(currentModel);
+      showLoader(false);
+      showCard(product.title, product.desc);
+    }, undefined, err => {
+      console.error('Modell-Ladefehler:', err);
+      showLoader(false);
+      showCard(product.title, product.desc + ' (Modell konnte nicht geladen werden)');
+    });
   }
-  controls.update();
-  renderer.render(scene,camera);
-}
-animate();
 
-// small helper: if user doesn't have models, ensure canvas still present
-</script>
-<script>
-  // set year
-  document.getElementById('yr').textContent = new Date().getFullYear();
-</script>
+  /* ---------- UI: Produktkarte zeigen / schließen ---------- */
+  const card = document.getElementById('productCard');
+  const pcTitle = document.getElementById('pcTitle');
+  const pcDesc = document.getElementById('pcDesc');
+  document.getElementById('cardClose').addEventListener('click', ()=>{
+    card.style.display='none';
+    // optional: zurückzoomen
+    gsap.to(camera.position, {duration:1.0, x:0, y:6, z:18, ease:"power2.inOut"});
+  });
+
+  function showCard(title, desc){
+    pcTitle.textContent = title;
+    pcDesc.textContent = desc;
+    card.style.display = 'block';
+    card.setAttribute('aria-hidden', 'false');
+  }
+
+  /* ---------- Animation Loop ---------- */
+  function animate(){
+    requestAnimationFrame(animate);
+    // subtle rotation of the whole star group for effect
+    pointsGroup.rotation.y += 0.0008;
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  /* ---------- Resize ---------- */
+  window.addEventListener('resize', ()=>{
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  // optional: initial gentle zoom animation on load
+  gsap.from(camera.position, {duration:1.6, z:30, ease:"power2.out"});
+  </script>
 </body>
 </html>
